@@ -11,14 +11,8 @@ public class Player : MonoBehaviour
     public float speedWalk;
     public float speedRun;
     public float speedRotate;
-
-
-    //to choose directional key in Unity
-    public string inputFront;
-    public string inputBack;
-    public string inputLeft;
-    public string inputRight;
-    public string inputJump;
+    public float horizontal;
+    public float vertical;
 
     //for the jump height
     public Vector3 jumpHeight;
@@ -26,34 +20,73 @@ public class Player : MonoBehaviour
     //for return the capsule collider of player
     CapsuleCollider playerCollider;
 
+    //for return the Animator of player
+    Animator playerAnimator;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
         playerRb = gameObject.GetComponent<Rigidbody>();
         playerCollider = gameObject.GetComponent<CapsuleCollider>();
+        playerAnimator = gameObject.GetComponent<Animator>(); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(inputFront))
+        PlayerWalk();
+        PlayerRun();
+    }
+
+
+    void PlayerWalk()
+    {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+
+        transform.Translate(Vector3.forward * speedWalk * vertical * Time.deltaTime);
+        transform.Translate(Vector3.forward * speedWalk * horizontal * Time.deltaTime);
+        transform.Rotate(Vector3.up * speedRotate * Time.deltaTime * horizontal);
+
+        if (horizontal > 0 || horizontal < 0 || vertical > 0 || vertical < 0)
         {
-            transform.Translate(0,0,speedWalk * Time.deltaTime);
+            playerAnimator.SetBool("isWalking", true);
+
+        }
+        else
+        {
+            playerAnimator.SetBool("isWalking", false);
         }
 
-        if(Input.GetKey(inputBack))
-        {
-            transform.Translate(0,0,-(speedWalk/2) * Time.deltaTime);
-        }
+    }
 
-        if(Input.GetKey(inputLeft))
+    void PlayerRun()
+    {
+        if (horizontal == Input.GetAxis("Horizontal")  && Input.GetKey(KeyCode.LeftShift))
         {
-            transform.Rotate(0,-speedRotate * Time.deltaTime,0);
+     
+            transform.Translate(Vector3.forward * speedRun * horizontal * Time.deltaTime);
+            playerAnimator.SetBool("isRunning", true);
         }
-
-        if (Input.GetKey(inputRight))
+        if(vertical == Input.GetAxis("Vertical") && Input.GetKey(KeyCode.LeftShift))
         {
-            transform.Rotate(0, speedRotate * Time.deltaTime, 0);
+            transform.Translate(Vector3.forward * speedRun * horizontal * Time.deltaTime);
+            playerAnimator.SetBool("isRunning", true);
+
+        }
+        else
+        {
+
+            playerAnimator.SetBool("isRunning", false);
         }
     }
+
+    void PlayJump()
+    {
+        bool jump = false;
+
+    }
+
 }
