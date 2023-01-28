@@ -5,88 +5,87 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     //for return rigidbody of player 
-    Rigidbody playerRb;
+    Rigidbody playerRigidbody;
 
     //speed of player on different states 
-    public float speedWalk;
-    public float speedRun;
-    public float speedRotate;
-    public float horizontal;
-    public float vertical;
+    [SerializeField] private float walkSpeed = 3f;
+    [SerializeField] private float runSpeed = 6f;
 
-    //for the jump height
-    public Vector3 jumpHeight;
 
-    //for return the capsule collider of player
-    CapsuleCollider playerCollider;
+    //for get value to move our Player  
+    Vector3 playerMovement = Vector3.zero;
+
+    //for check if the player jump
+    private bool isGrounded;
 
     //for return the Animator of player
     Animator playerAnimator;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
-        playerRb = gameObject.GetComponent<Rigidbody>();
-        playerCollider = gameObject.GetComponent<CapsuleCollider>();
-        playerAnimator = gameObject.GetComponent<Animator>(); 
+        playerRigidbody = GetComponent<Rigidbody>();
+        playerAnimator = GetComponent<Animator>(); 
     }
 
     // Update is called once per frame
+
     void Update()
     {
-        PlayerWalk();
-        PlayerRun();
+        PlayerJump();
     }
 
 
-    void PlayerWalk()
+    void FixedUpdate()
     {
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
-
-        transform.Translate(Vector3.forward * speedWalk * vertical * Time.deltaTime);
-        transform.Translate(Vector3.forward * speedWalk * horizontal * Time.deltaTime);
-        transform.Rotate(Vector3.up * speedRotate * Time.deltaTime * horizontal);
-
-        if (horizontal > 0 || horizontal < 0 || vertical > 0 || vertical < 0)
-        {
-            playerAnimator.SetBool("isWalking", true);
-
-        }
-        else
-        {
-            playerAnimator.SetBool("isWalking", false);
-        }
-
+        PlayerMove();
     }
-
-    void PlayerRun()
+    void PlayerMove()
     {
-        if (horizontal == Input.GetAxis("Horizontal")  && Input.GetKey(KeyCode.LeftShift))
+        // Get input axis for horizontal and vertical movement
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+    
+        // Calculate player movement based on input and walk speed
+        if(Input.GetKey(KeyCode.LeftShift) )
         {
-     
-            transform.Translate(Vector3.forward * speedRun * horizontal * Time.deltaTime);
+            playerMovement = new Vector3(horizontal, 0, vertical) * runSpeed * Time.deltaTime;
             playerAnimator.SetBool("isRunning", true);
-        }
-        if(vertical == Input.GetAxis("Vertical") && Input.GetKey(KeyCode.LeftShift))
-        {
-            transform.Translate(Vector3.forward * speedRun * horizontal * Time.deltaTime);
-            playerAnimator.SetBool("isRunning", true);
-
         }
         else
         {
-
+            playerMovement = new Vector3(horizontal, 0, vertical) * walkSpeed * Time.deltaTime;
+            playerAnimator.SetBool("isWalking", playerMovement.magnitude != 0f);
             playerAnimator.SetBool("isRunning", false);
+
+        }
+        
+        // Move player based on calculated movement
+        playerRigidbody.MovePosition(transform.position + playerMovement);
+        
+        // Check if player is moving and update player rotation
+        if (playerMovement.magnitude != 0f)
+        {
+            transform.LookAt(transform.position + playerMovement);
         }
     }
 
-    void PlayJump()
+    void PlayerJump()
     {
-        bool jump = false;
-
+        if ( Input.GetButtonDown("Jump") && isGrounded) // If the user presses the space key and the character is on the ground.
+        {
+            playerAnimator.SetBool("isJump", true);
+            playerRigidbody.AddForce(new Vector3(0, 11, 0), ForceMode.Impulse); // add a jump force at player 
+            isGrounded = false;
+        }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground")) // If the character collides with an object tagged "Ground"
+        {
+            isGrounded = true; // The character is no longer jumping.
+            playerAnimator.SetBool("isJump", false);
+        }
+    }
 }

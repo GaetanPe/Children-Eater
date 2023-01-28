@@ -23,20 +23,20 @@ public class CameraFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // récupérer les entrées de la souris
+        // get input of mouse
         currentX += Input.GetAxis("Mouse X") * sensitivity;
         
 
-        // limiter l'angle de rotation de la caméra
+        // limit the rotation angle
         currentY = Mathf.Clamp(currentY, -clampAngle, clampAngle);
 
-        // faire tourner la caméra autour de la cible
+        //turn around the target 
         transform.rotation = Quaternion.Euler(currentY, currentX, 0f);
 
-        // déplacer la caméra vers la cible
+        // move the camera to the target
         transform.position = target.position - transform.forward * distance;
 
-        // gérer les déplacements de la caméra avec les touches de direction
+        // manage the camera movements with the direction keys
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         transform.position += new Vector3(horizontal, 0f,vertical) * cameraSpeed * Time.deltaTime;
