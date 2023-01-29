@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     //for return rigidbody of player 
     Rigidbody playerRigidbody;
@@ -40,17 +40,18 @@ public class Player : MonoBehaviour
     {
         PlayerMove();
     }
+
     void PlayerMove()
     {
         // Get input axis for horizontal and vertical movement
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
     
-        // Calculate player movement based on input and walk speed
+        // Calculate player movement based on input and walk speed or run speed
         if(Input.GetKey(KeyCode.LeftShift) )
         {
             playerMovement = new Vector3(horizontal, 0, vertical) * runSpeed * Time.deltaTime;
-            playerAnimator.SetBool("isRunning", true);
+            playerAnimator.SetBool("isRunning", playerMovement.magnitude != 0f);
         }
         else
         {
@@ -75,7 +76,7 @@ public class Player : MonoBehaviour
         if ( Input.GetButtonDown("Jump") && isGrounded) // If the user presses the space key and the character is on the ground.
         {
             playerAnimator.SetBool("isJump", true);
-            playerRigidbody.AddForce(new Vector3(0, 11, 0), ForceMode.Impulse); // add a jump force at player 
+            playerRigidbody.AddForce(new Vector3(0, 17, 0), ForceMode.Impulse); // add a jump force at player 
             isGrounded = false;
         }
     }
