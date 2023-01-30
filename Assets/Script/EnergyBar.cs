@@ -14,6 +14,12 @@ public class EnergyBar : MonoBehaviour
     //for get current energy 
     public void setEnergy(float energy)
     {
+        
         slider.value = energy;
+    }
+    
+    public float getEnergy() 
+    {
+        return slider.value;
     }
 }

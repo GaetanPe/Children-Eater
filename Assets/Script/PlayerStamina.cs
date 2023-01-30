@@ -13,7 +13,7 @@ public class PlayerStamina : MonoBehaviour
         animator= GetComponent<Animator>();
         currentStamina = maxStamina;
         staminaBar.setMaxStamina(currentStamina);
-        InvokeRepeating("PlayerStatus", 0, 1);//used to called the function decrement every one seconds
+        InvokeRepeating("PlayerStatus", 0, 0.2f);//used to called the function decrement every 0,2 seconds
     }
 
     void PlayerStatus() 
@@ -23,7 +23,7 @@ public class PlayerStamina : MonoBehaviour
             currentStamina--;
             staminaBar.setStamina(currentStamina);
         }
-        if (!animator.GetBool("isRunning") && currentStamina != maxStamina)
+        if (!animator.GetBool("isRunning") && currentStamina != maxStamina && !animator.GetBool("isDeath"))
         {
             currentStamina++;
             staminaBar.setStamina(currentStamina);

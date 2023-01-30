@@ -10,11 +10,14 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float currentHealth;
 
     //called HealthBar Class
-    public HealthBar healthBar; 
+    public HealthBar healthBar;
+
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         currentHealth = maxHealth;
 
         healthBar.setMaxHealth(currentHealth);
@@ -23,12 +26,20 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            playerHurt(20);
+        }
     }
 
-    //this function allows to detect if the player is injured and if he is injured his life decreases.
+    //this function allows to detect if the player is injured and if he is injured his life decreases if the player is not death .
     void playerHurt (float damage)
     {
-        currentHealth -= damage;
-        healthBar.setHealth(currentHealth);
+        if(!animator.GetBool("isDeath"))
+        {
+            currentHealth -= damage;
+            healthBar.setHealth(currentHealth);
+        }
+       
     }
 }

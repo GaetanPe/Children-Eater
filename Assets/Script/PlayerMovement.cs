@@ -6,11 +6,11 @@ public class PlayerMovement : MonoBehaviour
 {
     //for return rigidbody of player 
     Rigidbody playerRigidbody;
-
+    
     //speed of player on different states 
     [SerializeField] private float walkSpeed = 3f;
     [SerializeField] private float runSpeed = 6f;
-
+   
 
     //for get value to move our Player  
     Vector3 playerMovement = Vector3.zero;
@@ -39,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         PlayerMove();
+
     }
 
     void PlayerMove()
@@ -61,14 +62,18 @@ public class PlayerMovement : MonoBehaviour
 
         }
         
-        // Move player based on calculated movement
-        playerRigidbody.MovePosition(transform.position + playerMovement);
-        
-        // Check if player is moving and update player rotation
-        if (playerMovement.magnitude != 0f)
+        if(!playerAnimator.GetBool("isDeath"))
         {
-            transform.LookAt(transform.position + playerMovement);
+            // Move player based on calculated movement
+            playerRigidbody.MovePosition(transform.position + playerMovement);
+
+            // Check if player is moving and update player rotation
+            if (playerMovement.magnitude != 0f)
+            {
+                transform.LookAt(transform.position + playerMovement);
+            }
         }
+       
     }
 
     void PlayerJump()
@@ -76,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
         if ( Input.GetButtonDown("Jump") && isGrounded) // If the user presses the space key and the character is on the ground.
         {
             playerAnimator.SetBool("isJump", true);
-            playerRigidbody.AddForce(new Vector3(0, 17, 0), ForceMode.Impulse); // add a jump force at player 
+            playerRigidbody.AddForce(new Vector3(0, 30, 0), ForceMode.Impulse); // add a jump force at player 
             isGrounded = false;
         }
     }
@@ -88,5 +93,7 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = true; // The character is no longer jumping.
             playerAnimator.SetBool("isJump", false);
         }
+
     }
+
 }

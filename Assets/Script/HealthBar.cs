@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
+    
     public Slider slider;
     public Gradient gradient;
     public Image fill;
@@ -22,5 +23,10 @@ public class HealthBar : MonoBehaviour
     {
         slider.value =  health;
         fill.color = gradient.Evaluate(slider.normalizedValue);
+    }
+
+    public float getHealth() 
+    {
+        return slider.value;
     }
 }
