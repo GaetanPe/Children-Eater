@@ -5,88 +5,99 @@ using UnityEngine.AI;
 
 public class Enemies : MonoBehaviour
 {
-    public float Distance;
-
-    private bool isDead = false;
+    //float time;
 
     public Transform Target;
+    public float lookRadius;
+
+    
+    //private bool isDead = false;
 
     public float chaseRange = 10;
 
     public float attackRange = 2.5f;
 
-    public float attackReapeatTime = 1;
-    private float attackTime;
+    // public float attackReapeatTime = 1;
+    // private float attackTime;
 
-    public float TheDamage;
+    // public float TheDamage;
 
-    public NavMeshAgent raptor;
+    public NavMeshAgent Raptor;
 
-    private Animator animations;
+    //AudioSource audioRaptor;
+
+    private Animator animRaptor;
     // Start is called before the first frame update
     void Start()
     {
-
-        raptor = gameObject.GetComponent<NavMeshAgent>();
-        animations = gameObject.GetComponent<Animator>();
-        attackTime = Time.time;
+        
+        animRaptor = GetComponent<Animator>();
+        Raptor = GetComponent<NavMeshAgent>();
+        //audioRaptor = GetComponent<AudioSource>();
+        // time = 0;
+        
+        // animRaptor = gameObject.GetComponent<Animator>();
+        // attackTime = Time.time;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isDead)
+        
+        //Raptor.destination = Target.position;
+        //Target = GameObject.Find("Player").transform;
+        float distanceTarget = Vector3.Distance(Target.position, transform.position);
+        if(distanceTarget <= lookRadius)
         {
-            Target = GameObject.FindWithTag("Player").transform;
-            Distance = Vector3.Distance(Target.position, transform.position);
-
-            //When the enemy is near 
-            if (Distance > chaseRange)
-            {
-                idle();
-            }
-
-            if (Distance < chaseRange && Distance > attackRange)
-            {
-                chase();
-            }
-
-            if (Distance < attackRange)
-            {
-                attack();
-            }
+            Raptor.isStopped = false;
         }
+        
+        if(Raptor.remainingDistance > lookRadius)
+        {
+            Raptor.speed = 0f;
+            animRaptor.SetBool("stay",true);
+            animRaptor.SetBool("isChasing",false);
+            
+        }
+        else
+        {
+            Raptor.speed = 4f;
+            animRaptor.SetBool("stay",false);
+            animRaptor.SetBool("isChasing",true);
+            animRaptor.SetBool("isCalling",true);
+            Raptor.SetDestination(Target.position);
+        }
+
        
     }
 
-    void chase()
-    {
-        animations.Play("run");
-        raptor.destination = Target.position;
-    }
+    
 
-    void attack()
-    {
-        raptor.destination = transform.position;
+    // void chase()
+    // {
+      
+    //     animRaptor.Play("Run");
+    //     Raptor.destination = Target.position;
+    // }
 
-        if(Time.time > attackTime)
-        {
-            animations.Play("bite");
-            /*Target.GetComponent<PlayerInventory>().ApplyDamage(TheDamage);
-            Debug.Log("The raptor send " + TheDamage + " pv.");
-            attackTime = Time.time + attackReapeatTime;*/
-        }
-    }
+    // void attack()
+    // {
+    //     raptor.destination = transform.position;
 
-    void idle()
-    {
-        animations.Play("idle");
-    }
+    //     if(Time.time > attackTime)
+    //     {
+    //         animRaptor.Play("Bite");
+    //         /*Target.GetComponent<PlayerInventory>().ApplyDamage(TheDamage);
+    //         Debug.Log("The raptor send " + TheDamage + " pv.");
+    //         attackTime = Time.time + attackReapeatTime;*/
+    //     }
+    // }
 
-    void call()
-    {
-
-    }
+    
+    // void call()
+    // {
+    //     animRaptor.Play("Call");
+    // }
 
     /*public void ApplyDamage(float TheDamage)
     {
@@ -106,7 +117,7 @@ public class Enemies : MonoBehaviour
     public void Dead()
     {
         isDead = true;
-        animations.Play("die");
+        animations.Play("Death");
         Destroy(transform.gameObject, 5);
     }*/
 }
