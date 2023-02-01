@@ -8,114 +8,86 @@ public class Enemies : MonoBehaviour
     //float time;
 
     public Transform Target;
-    public float lookRadius;
-
-
-    //private bool isDead = false;
-
-    public float chaseRange = 10;
-
-    public float attackRange = 2.5f;
-
-    // public float attackReapeatTime = 1;
-    // private float attackTime;
-
-    // public float TheDamage;
-
     public NavMeshAgent Raptor;
 
-    //AudioSource audioRaptor;
+    public float lookRadius;
 
-    private Animator animRaptor;
-    // Start is called before the first frame update
+    public float chase = 10;
+
+    public float attackRange = 2.2f;
+
+    public float attackRepeat = 1;
+    private float attackTime;
+
+    public float damage;
+
+    AudioSource audioRaptor;
+
+    private Animator animeRaptor;
+    
     void Start()
     {
-
-        animRaptor = GetComponent<Animator>();
+         
+        animeRaptor = GetComponent<Animator>();
         Raptor = GetComponent<NavMeshAgent>();
-        //audioRaptor = GetComponent<AudioSource>();
-        // time = 0;
-
-        // animRaptor = gameObject.GetComponent<Animator>();
-        // attackTime = Time.time;
+        audioRaptor = GetComponent<AudioSource>
+        attackTime = attackTime.time;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        //Raptor.destination = Target.position;
-        //Target = GameObject.Find("Player").transform;
+        Raptor = GameObject.Find("Player").transform;
+       
         float distanceTarget = Vector3.Distance(Target.position, transform.position);
-        if (distanceTarget <= lookRadius)
+        if (distanceTarget > lookRadius)
         {
-            Raptor.isStopped = false;
+            idle();
         }
 
-        if (Raptor.remainingDistance > lookRadius)
+        if (distanceTarget < chase && distanceTarget > attackRange)
         {
-            Raptor.speed = 0f;
-            animRaptor.SetBool("stay", true);
-            animRaptor.SetBool("isChasing", false);
+            chase();
 
         }
-        else
+        if (distanceTarget < attackRange)
         {
-            Raptor.speed = 4f;
-            animRaptor.SetBool("stay", false);
-            animRaptor.SetBool("isChasing", true);
-            animRaptor.SetBool("isCalling", true);
-            Raptor.SetDestination(Target.position);
+            attack();
         }
 
 
     }
 
-
-
-    // void chase()
-    // {
-
-    //     animRaptor.Play("Run");
-    //     Raptor.destination = Target.position;
-    // }
-
-    // void attack()
-    // {
-    //     raptor.destination = transform.position;
-
-    //     if(Time.time > attackTime)
-    //     {
-    //         animRaptor.Play("Bite");
-    //         /*Target.GetComponent<PlayerInventory>().ApplyDamage(TheDamage);
-    //         Debug.Log("The raptor send " + TheDamage + " pv.");
-    //         attackTime = Time.time + attackReapeatTime;*/
-    //     }
-    // }
-
-
-    // void call()
-    // {
-    //     animRaptor.Play("Call");
-    // }
-
-    /*public void ApplyDamage(float TheDamage)
+    void chase()
     {
-        if(!isDead)
-        {
-            enemyHealth = enemyHealth - TheDamage;
-            print(gameObject.name + " a subit " + TheDamage + " pv.");
-            if(enemyHealth <= 0)
-            {
-                Dead();
-            }
-        }
-        
+
+        animeRaptor.SetBool("isRunning");
+        Raptor.destination = Target.position;
     }
+
+    void idle()
+    {
+        animeRaptor.play("idle");
+    }
+
+    void attack()
+    {
+        Raptor.destination = Target.position;
+
+        if(Time.time > attackTime)
+        {
+            animeRaptor.SetBool("Attack");
+            Target.GetCompenent<PlayerInventory>.ApplyDammage(damage);
+            attackTime = Time.time + attackRepeat;
+        }
+    }
+
     public void Dead()
     {
         isDead = true;
-        animations.Play("Death");
+        animeRaptor.SetBool("isDead");
         Destroy(transform.gameObject, 5);
-    }*/
+    }
+
 }
