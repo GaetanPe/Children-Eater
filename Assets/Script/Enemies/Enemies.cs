@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
 
 public class Enemies : MonoBehaviour
 {
     //float time;
-
+    
     public Transform Target;
     public NavMeshAgent Raptor;
 
@@ -19,9 +18,13 @@ public class Enemies : MonoBehaviour
     public float attackRepeat = 1;
     private float attackTime;
 
+    [SerializeField] private bool isDead = false;
+
     public float damage;
 
     AudioSource audioRaptor;
+
+    public PlayerHealth playerHealth;
 
     private Animator animeRaptor;
     
@@ -30,25 +33,19 @@ public class Enemies : MonoBehaviour
          
         animeRaptor = GetComponent<Animator>();
         Raptor = GetComponent<NavMeshAgent>();
-        audioRaptor = GetComponent<AudioSource>
-        attackTime = attackTime.time;
+        audioRaptor = GetComponent<AudioSource>();
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        Raptor = GameObject.Find("Player").transform;
        
         float distanceTarget = Vector3.Distance(Target.position, transform.position);
-        if (distanceTarget > lookRadius)
-        {
-            idle();
-        }
 
         if (distanceTarget < chase && distanceTarget > attackRange)
         {
-            chase();
+            Chase();
 
         }
         if (distanceTarget < attackRange)
@@ -59,17 +56,13 @@ public class Enemies : MonoBehaviour
 
     }
 
-    void chase()
+    void Chase()
     {
 
-        animeRaptor.SetBool("isRunning");
+        animeRaptor.SetBool("isRunning", true);
         Raptor.destination = Target.position;
     }
 
-    void idle()
-    {
-        animeRaptor.play("idle");
-    }
 
     void attack()
     {
@@ -77,8 +70,8 @@ public class Enemies : MonoBehaviour
 
         if(Time.time > attackTime)
         {
-            animeRaptor.SetBool("Attack");
-            Target.GetCompenent<PlayerInventory>.ApplyDammage(damage);
+            animeRaptor.SetBool("Attack", true);
+            playerHealth.playerHurt(10);
             attackTime = Time.time + attackRepeat;
         }
     }
@@ -86,7 +79,7 @@ public class Enemies : MonoBehaviour
     public void Dead()
     {
         isDead = true;
-        animeRaptor.SetBool("isDead");
+        animeRaptor.SetBool("isDead", true);
         Destroy(transform.gameObject, 5);
     }
 

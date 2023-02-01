@@ -33,7 +33,7 @@ public class PlayerHealth : MonoBehaviour
     }
 
     //this function allows to detect if the player is injured and if he is injured his life decreases if the player is not death .
-    void playerHurt (float damage)
+    public void playerHurt (float damage)
     {
         if(!animator.GetBool("isDeath"))
         {
