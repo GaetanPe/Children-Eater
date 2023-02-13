@@ -9,7 +9,7 @@ public class Enemies : MonoBehaviour
     public Transform Target;
     public NavMeshAgent Raptor;
 
-    public float lookRadius;
+    public float lookRadius = 10f;
 
     public float chase = 10;
 
@@ -18,13 +18,14 @@ public class Enemies : MonoBehaviour
     public float attackRepeat = 1;
     private float attackTime;
 
-    [SerializeField] private bool isDead = false;
 
     public float damage;
 
     AudioSource audioRaptor;
 
     public PlayerHealth playerHealth;
+
+    [SerializeField] Animator playerAnimator;
 
     private Animator animeRaptor;
     
@@ -40,20 +41,21 @@ public class Enemies : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-        float distanceTarget = Vector3.Distance(Target.position, transform.position);
-
-        if (distanceTarget < chase && distanceTarget > attackRange)
+        if(!playerAnimator.GetBool("isDeath"))
         {
-            Chase();
 
+            float distanceTarget = Vector3.Distance(Target.position, transform.position);
+
+            if (distanceTarget < chase && distanceTarget > attackRange)
+            {
+                Chase();
+            }
+            if (distanceTarget < attackRange)
+            {
+                attack();
+                
+            }
         }
-        if (distanceTarget < attackRange)
-        {
-            attack();
-        }
-
-
     }
 
     void Chase()
@@ -74,13 +76,6 @@ public class Enemies : MonoBehaviour
             playerHealth.playerHurt(10);
             attackTime = Time.time + attackRepeat;
         }
-    }
-
-    public void Dead()
-    {
-        isDead = true;
-        animeRaptor.SetBool("isDead", true);
-        Destroy(transform.gameObject, 5);
     }
 
 }

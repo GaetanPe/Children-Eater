@@ -10,13 +10,12 @@ public class PlayerMovement : MonoBehaviour
     //speed of player on different states 
     [SerializeField] private float walkSpeed = 3f;
     [SerializeField] private float runSpeed = 6f;
-   
 
     //for get value to move our Player  
     Vector3 playerMovement = Vector3.zero;
 
     //for check if the player jump
-    private bool isGrounded;
+    public bool isGrounded;
 
     //for return the Animator of player
     Animator playerAnimator;
