@@ -26,10 +26,7 @@ public class PlayerHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            playerHurt(20);
-        }
+
     }
 
     //this function allows to detect if the player is injured and if he is injured his life decreases if the player is not death .
