@@ -25,14 +25,14 @@ public class Enemies : MonoBehaviour
 
     public PlayerHealth playerHealth;
 
-    [SerializeField] Animator playerAnimator;
+    [SerializeField] private Animator playerAnimator;
 
-    private Animator animeRaptor;
+    //[SerializeField] private Animator animeRaptor;
     
     void Start()
     {
          
-        animeRaptor = GetComponent<Animator>();
+        //animeRaptor = GetComponent<Animator>();
         Raptor = GetComponent<NavMeshAgent>();
         audioRaptor = GetComponent<AudioSource>();
         
@@ -61,7 +61,7 @@ public class Enemies : MonoBehaviour
     void Chase()
     {
 
-        animeRaptor.SetBool("isRunning", true);
+        //animeRaptor.SetBool("isRunning", true);
         Raptor.destination = Target.position;
     }
 
@@ -72,7 +72,7 @@ public class Enemies : MonoBehaviour
 
         if(Time.time > attackTime)
         {
-            animeRaptor.SetBool("Attack", true);
+            //animeRaptor.SetBool("Attack", true);
             playerHealth.playerHurt(10);
             attackTime = Time.time + attackRepeat;
         }
