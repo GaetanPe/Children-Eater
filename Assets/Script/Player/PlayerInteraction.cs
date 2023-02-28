@@ -45,6 +45,8 @@ public class PlayerInteraction : MonoBehaviour
             currentEnergy += restoreEnergy;
             energyBar.setEnergy(currentEnergy);
             interactObject.SetActive(false);
+            foodText.SetActive(false);
+
         }
     }
 }
