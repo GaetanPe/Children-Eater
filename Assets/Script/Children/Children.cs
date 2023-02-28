@@ -7,15 +7,16 @@ public class Children : MonoBehaviour
 {
     public Transform Target;
     public NavMeshAgent Child;
+    private GameObject isSaved;
 
     //Distance between the player and the child
-    public float distance = 5;
+    public float distance = 3;
 
     public Animator animChildren;
     // Start is called before the first frame update
     void Start()
     {
-        //animeChildren = GetComponent<Animator>();
+        animChildren = GetComponent<Animator>();
         Child = GetComponent<NavMeshAgent>();
     }
 
@@ -27,7 +28,20 @@ public class Children : MonoBehaviour
         //The player found a child
         if (distanceTarget < distance)
         {
-            //animeChildren.SetBool("isFinding", true);
+            animChildren.SetBool("isFinding", true);
+
+        }
+
+
+    }
+
+    //contact between the player and a child
+    void OnTriggerExit(collider collidChild)
+    {
+        if (collidChild.gameObject.CompareTag("Child"))
+        {
+            isSaved = collidChild.gameObject;
         }
     }
+
 }
