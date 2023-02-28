@@ -13,9 +13,8 @@ public class PlayerEnergy : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        currentEnergy= maxEnergy +1f; 
-        energyBar.setMaxEnergy(currentEnergy);
-        InvokeRepeating("Decrement", 0, 5);//used to called the function decrement every five seconds
+        currentEnergy= maxEnergy +1f;
+        InvokeRepeating("Decrement", 0, 3);//used to called the function decrement every tree seconds
     }
 
     //this function permit to decrease the player  energy 
@@ -23,9 +22,11 @@ public class PlayerEnergy : MonoBehaviour
     {
         if(!animator.GetBool("isDeath"))
         {
+            currentEnergy = energyBar.getEnergy();
             currentEnergy--;
             energyBar.setEnergy(currentEnergy);
+
         }
-        
+
     }
 }
