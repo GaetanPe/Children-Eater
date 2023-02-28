@@ -7,6 +7,7 @@ public class PlayerDeath : MonoBehaviour
     public HealthBar healthBar;
     public StaminaBar staminaBar;
     public EnergyBar energyBar;
+    [SerializeField] private GameObject gameOverText;
     Animator playerAnimator;
 
     // Start is called before the first frame update
@@ -21,6 +22,11 @@ public class PlayerDeath : MonoBehaviour
         if (healthBar.getHealth() == 0 || staminaBar.getStamina() == 0 || energyBar.getEnergy()==0)
         {
             playerAnimator.SetBool("isDeath", true);
+            gameOverText.SetActive(true);
+        }
+        else
+        {
+            gameOverText.SetActive(false);
         }
     }
 }

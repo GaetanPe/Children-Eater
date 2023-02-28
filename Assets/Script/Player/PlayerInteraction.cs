@@ -9,14 +9,20 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private bool interact = false;
     [SerializeField] private float restoreEnergy = 5f;
     [SerializeField] private float currentEnergy;
+    [SerializeField] private GameObject foodText;
     private GameObject interactObject;
 
+    private void Start()
+    {
+        foodText.SetActive(false);
+    }
     void OnTriggerEnter(Collider collider)
     {
         interact = true;
         if (collider.gameObject.CompareTag("Food"))
         {
             interactObject = collider.gameObject;
+            foodText.SetActive(true);
         }
     }
 
@@ -26,6 +32,8 @@ public class PlayerInteraction : MonoBehaviour
         {
             interactObject = null;
             interact = false;
+            foodText.SetActive(false);
+
         }
     }
 

@@ -5,18 +5,18 @@ using UnityEngine.AI;
 
 public class Children : MonoBehaviour
 {
+    public ChildrenSaved childrenSaved;
     public Transform Target;
     public NavMeshAgent Child;
-    private GameObject isSaved;
+    [SerializeField] private GameObject childObject;
 
     //Distance between the player and the child
     public float distance = 3;
 
-    public Animator animChildren;
+    //public Animator animChildren;
     // Start is called before the first frame update
     void Start()
     {
-        animChildren = GetComponent<Animator>();
         Child = GetComponent<NavMeshAgent>();
     }
 
@@ -28,20 +28,13 @@ public class Children : MonoBehaviour
         //The player found a child
         if (distanceTarget < distance)
         {
-            animChildren.SetBool("isFinding", true);
-
+            Destroy(childObject);
+            childrenSaved.childrenSavedCount++;
+            //animChildren.SetBool("isFinding", true);
+           
         }
 
 
-    }
-
-    //contact between the player and a child
-    void OnTriggerExit(collider collidChild)
-    {
-        if (collidChild.gameObject.CompareTag("Child"))
-        {
-            isSaved = collidChild.gameObject;
-        }
     }
 
 }
